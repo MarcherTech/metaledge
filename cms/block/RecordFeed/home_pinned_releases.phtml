@@ -1,8 +1,13 @@
 <ips:template parameters="$database, $records, $orientation='vertical'" original_group="" key="block_RecordFeed_home_pinned_releases" />
 {{if !empty( $records ) }}
+{{$FieldsClass  = '\\IPS\\cms\\Fields'  . $database->id;}}
+{{$fieldsByKey = array();}}
+{{foreach $FieldsClass::data('view', NULL, $FieldsClass::FIELD_SKIP_TITLE_CONTENT) as $field}}
+{{$fieldsByKey[$field->key] = 'field_' . $field->id;}}
+{{endforeach}}
 <div class="ipsGrid metalEdge-pinned_releases">
 	{{foreach $records as $row}}
-	<div class="ipsGrid_span6 metalEdge_box">
+	<div class="ipsGrid_span4 metalEdge_box">
           <div class="ipsCms_record_image">
               <img class="ipsImage" src="{$row->customFieldDisplayByKey('releases-album-art', 'display')|raw}" height="475" width="475">
           </div>
@@ -17,9 +22,11 @@
                     <br> By {$row->author()->link()|raw}
                </div>
           </div>
+            {{if $row->$fieldsByKey['url-spotify']}}
           <div class="metalEdge_spotify">
                {$row->customFieldDisplayByKey('url-spotify')|raw}
           </div>
+            {{endif}}
 	</div>
 	{{endforeach}}
 </div>
